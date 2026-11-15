@@ -2,14 +2,7 @@ import numpy as np
 import scipy.sparse as sp
 import scipy.sparse.linalg as spla
 
-"""
-Forward Euler Method
-L: lalplacian matrix
-u0: initial condition
-f: forcing function
-T: Total time
-Nt: number of time steps
-"""
+
 def forward_euler(L, u0, f, T, M):
     dt = T / M
     u = u0.copy()

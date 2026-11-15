@@ -58,3 +58,26 @@ def laplacian(Nx, Ny, dx, dy):
 
 def D2(m, h):
         return sp.diags([1.0, -2.0, 1.0], [-1, 0, 1], shape=(m, m)) / h**2
+
+def time_stepping(T, u_exact_func, NVals, method):
+    results = {}
+
+    for N in NVals:
+        dx = 2*np.pi / N
+        L = laplacian(N, N, dx, dx)
+
+        x = np.linspace(0, T, N+1)[1:-1]
+        X, Y = np.meshgrid(x, x, indexing='ij')
+        sinS = (np.sin(X) * np.sin(Y)).ravel()
+
+        u0 = sinS.copy()
+        f = lambda t, sinS=sinS: (2*np.cos(10*t) - 10*np.sin(10*t)) * sinS
+        u_exact = u_exact_func(X, Y, T).ravel()
+
+        dts, errs = [], []
+        for M in NVals[N]:
+            u_approx = method(L, u0, f, T, M)
+            errs.append(np.linalg.norm(u_approx - u_exact) / np.linalg.norm(u_exact))
+            dts.append(T / M)
+        results[N] = (np.array(dts), np.array(errs))
+    return results

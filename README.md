@@ -1,1 +1,1 @@
-# MATH550_HW3
+# MATH 550: Numerical PDEs - Homework 3

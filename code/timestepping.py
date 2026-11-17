@@ -34,7 +34,7 @@ def explicit_midpoint(L, u0, f, T, M):
     dt = T / M
     u = u0.copy()
     for n in range(M):
-        u_half = u + 1/2 * dt * (L @ u + f(n * dt))
+        u_half = u + (1/2 * dt) * (L @ u + f(n * dt))
         u = u + dt * (L @ u_half + f((n + 1/2) * dt))
     return u
 
@@ -68,10 +68,11 @@ def time_stepping(T, u_exact_func, NVals, method):
 
         x = np.linspace(0, T, N+1)[1:-1]
         X, Y = np.meshgrid(x, x, indexing='ij')
-        sinS = (np.sin(X) * np.sin(Y)).ravel()
+        sines = (np.sin(X) * np.sin(Y)).ravel()
 
-        u0 = sinS.copy()
-        f = lambda t, sinS=sinS: (2*np.cos(10*t) - 10*np.sin(10*t)) * sinS
+        u0 = sines.copy()
+        lam = -8 / dx**2
+        f = lambda t, sines=sines: (lam*np.cos(10*t) - 10*np.sin(10*t)) * sines
         u_exact = u_exact_func(X, Y, T).ravel()
 
         dts, errs = [], []

@@ -71,7 +71,7 @@ def time_stepping(T, u_exact_func, NVals, method):
         sines = (np.sin(X) * np.sin(Y)).ravel()
 
         u0 = sines.copy()
-        lam = -8 / dx**2
+        lam = (8 / dx**2) * (np.sin(dx / 2) ** 2)
         f = lambda t, sines=sines: (lam*np.cos(10*t) - 10*np.sin(10*t)) * sines
         u_exact = u_exact_func(X, Y, T).ravel()
 

@@ -1,6 +1,4 @@
 import numpy as np
-import scipy.sparse as sp
-import scipy.sparse.linalg as spla
 import timestepping as ts
 import matplotlib.pyplot as plt
 
@@ -28,26 +26,35 @@ cnResults = ts.time_stepping(T, u_exact_func, NValsCN, ts.crank_nicolson)
 emResults = ts.time_stepping(T, u_exact_func, NValsEM, ts.explicit_midpoint)
 bdf2Results = ts.time_stepping(T, u_exact_func, NValsBD, ts.BDF2)
 
-def plot_convergence(ax, results, order, title, xlabel=r'$\Delta t^2$'):
+def plot_convergence(ax, results, order, title):
+    all_dts = []
     for N, (dts, errs) in results.items():
         ax.loglog(dts, errs, markersize=8, label=f'N = {N}', **STYLES[N])
+        all_dts.extend(dts)
+    all_dts = np.sort(all_dts)
 
     k = len(dts) // 2
-    ax.loglog(dts, errs[k] * (dts / dts[k])**order, 'k:', linewidth=3, label=f"O({xlabel})")
+    ref = errs[k] * (all_dts / dts[k])**order
+
+    if order == 1:
+        label = r'O($\Delta t$)'
+    else: 
+        label = r'O($\Delta t^2$)'
+    ax.loglog(all_dts, ref, 'k:', linewidth=3, label=label)
 
     ax.set_title(title)
-    ax.set_xlabel(xlabel)
+    ax.set_xlabel(r'$\Delta t$')
     ax.set_ylabel('Relative Error')
     ax.legend()
 
 
-fig, axes = plt.subplots(2, 3, figsize=(14, 8))
+fig, axes = plt.subplots(2, 3, figsize=(16, 9))
 axes = axes.ravel()
 
-plot_convergence(axes[0], feResults, 1, "Relative Error of Forward Euler Method", r'$\Delta t$')
-plot_convergence(axes[1], beResults, 1, "Relative Error of Backward Euler Method", r'$\Delta t$')
-plot_convergence(axes[2], cnResults, 2, "Relative Error of Crank Nicolson Euler Method")
-plot_convergence(axes[3], emResults, 2, "Relative Error of Explicit Midpoint Euler Method")
+plot_convergence(axes[0], feResults,   1, "Relative Error of Forward Euler Method")
+plot_convergence(axes[1], beResults,   1, "Relative Error of Backward Euler Method")
+plot_convergence(axes[2], cnResults,   2, "Relative Error of Crank Nicolson Method")
+plot_convergence(axes[3], emResults,   2, "Relative Error of Explicit Midpoint Method")
 plot_convergence(axes[4], bdf2Results, 2, "Relative Error of BDF2 Method")
 
 axes[-1].axis('off')

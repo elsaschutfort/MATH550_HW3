@@ -3,16 +3,14 @@ import scipy.sparse as sp
 import scipy.sparse.linalg as spla
 
 
-def forward_euler(L, u0, f, T, M):
+def forward_euler(L, u, f, T, M):
     dt = T / M
-    u = u0.copy()
     for n in range(M):
         u = u + dt * (L @ u + f(n * dt))
     return u
 
-def backward_euler(L, u0, f, T, M):
+def backward_euler(L, u, f, T, M): 
     dt = T / M
-    u = u0.copy()
     I = sp.identity(L.shape[0], format='csc')
     solve = spla.factorized((I - dt * L).tocsc())
     for n in range(M):
@@ -20,9 +18,8 @@ def backward_euler(L, u0, f, T, M):
         u = solve(b)
     return u
 
-def crank_nicolson(L, u0, f, T, M):
+def crank_nicolson(L, u, f, T, M):
     dt = T / M
-    u = u0.copy()
     I = sp.identity(L.shape[0], format='csc')
     solve = spla.factorized((I - 1/2 * dt * L).tocsc())
     for n in range(M):
@@ -30,9 +27,8 @@ def crank_nicolson(L, u0, f, T, M):
         u = solve(b)
     return u
 
-def explicit_midpoint(L, u0, f, T, M):
+def explicit_midpoint(L, u, f, T, M):
     dt = T / M
-    u = u0.copy()
     for n in range(M):
         u_half = u + (1/2 * dt) * (L @ u + f(n * dt))
         u = u + dt * (L @ u_half + f((n + 1/2) * dt))
@@ -54,7 +50,7 @@ def BDF2(L, u0, f, T, M):
 def laplacian(Nx, Ny, dx, dy):
     nx, ny = Nx - 1, Ny - 1 
     Ix, Iy = sp.identity(nx), sp.identity(ny)
-    return (sp.kron(D2(nx, dx), Iy) + sp.kron(Ix, D2(ny, dy))).tocsr()
+    return (sp.kron(D2(nx, dx), Iy) + sp.kron(Ix, D2(ny, dy))).tocsc()
 
 def D2(m, h):
         return sp.diags([1.0, -2.0, 1.0], [-1, 0, 1], shape=(m, m)) / h**2

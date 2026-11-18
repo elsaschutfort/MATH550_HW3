@@ -25,6 +25,17 @@ def rel_errors(Nt, method, T=2*np.pi, u_exact=u_exact, L=L, u0=u0, f=f):
 def minimum_stable_Nt(N):
     return math.ceil(2 * N**2 / np.pi)
 
-def largest_deltat(tol, min_Nt, max_Nt=2**17):
-    #if (rel_errors(min_Nt, ))
-    return
+def largest_deltat(tol, method, min_Nt, max_Nt=2**17):
+    if (rel_errors(min_Nt, method) <= tol):
+        return min_Nt
+    if (rel_errors(max_Nt, method) > tol):
+        return None
+    while (min_Nt + max_Nt) > 1:
+        mid_Nt = (min_Nt + max_Nt) // 2
+        if (rel_errors(mid_Nt, method) <= tol):
+            max_Nt = mid_Nt
+        if (rel_errors(mid_Nt, method) > tol):
+            min_Nt = mid_Nt
+    return mid_Nt
+
+

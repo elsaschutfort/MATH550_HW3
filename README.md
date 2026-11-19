@@ -8,20 +8,22 @@ MATH550-HW0/
 ├── code/
 │   ├── timestepping.py
 |   ├── problem1.py
-│   └── Place Holder
+|   ├── problem2.py
+│   └── prob3.py
 └── writeup/
-    ├── README.md
+    ├── Math550_HW3.pdf
+    ├── main.tex
     └── figures/
-        ├── Place Holder
-        ├── Place Holder
-        └── Place Holder
+        └── RelativeErrors.png
 ```
 
 ## Files
 
 | Path | Description |
 |------|-------------|
-| `writeup/README.md` | Homework submission |
+| `writeup/Math550_HW3` | Homework submission |
+| `writeup/main.tex` | Homework tex file |
+| `writeup/figures/RelativeError.png` | Relative Error plot |
 | `code/timestepping.py` | Place Holder |
 | `code/problem1.py` | Place Holder |
 

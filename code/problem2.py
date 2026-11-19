@@ -2,7 +2,7 @@ import numpy as np
 import timestepping as ts
 import math
 
-N = 64
+N = 128
 T = 2 * np.pi
 dx = 2*np.pi / N
 u_exact_func = lambda x, y, t: np.cos(10 * t) * np.sin(x) * np.sin(y)
@@ -54,16 +54,20 @@ min_Nt = minimum_stable_Nt(N)
 #             print(f"tol: {tol} N: {smallest_Nt} name: {name}")
 
 
-N = 128
 min_Nt = minimum_stable_Nt(N)
 
-for (method, name) in explicit_methods:
-    for tol in tols:
-        smallest_Nt = largest_deltat(tol, method, min_Nt)
-        print(f"tol: {tol} N: {smallest_Nt} name: {name}")
+# for (method, name) in explicit_methods:
+#     for tol in tols:
+#         smallest_Nt = largest_deltat(tol, method, min_Nt)
+#         print(f"tol: {tol} N: {smallest_Nt} name: {name}")
 
-for (method, name) in implicit_methods:
-    for tol in tols:
-        smallest_Nt = largest_deltat(tol, method, 32)
-        print(f"tol: {tol} N: {smallest_Nt} name: {name}")
+# for (method, name) in implicit_methods:
+#     for tol in tols:
+#         smallest_Nt = largest_deltat(tol, method, 32)
+#         print(f"tol: {tol} N: {smallest_Nt} name: {name}")
 
+# for tol in tols:
+#     smallest_Nt = largest_deltat(tol, ts.BDF2, 32)
+#     print(f"tol: {tol} N: {smallest_Nt}")
+
+print(rel_errors(2**21, ts.backward_euler, 32))
